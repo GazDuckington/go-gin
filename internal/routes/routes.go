@@ -21,5 +21,6 @@ func SetupRouter(cfg *config.Config) *gin.Engine {
 
 	// NOTE: register domains
 	RegisterUserRoutes(r, cfg)
+	RegisterAuthRoutes(r, cfg)
 	return r
 }

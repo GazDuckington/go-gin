@@ -1,15 +1,17 @@
 package service
 
 import (
+	"context"
+
 	"github.com/GazDuckington/go-gin/internal/models/dto"
 	"github.com/GazDuckington/go-gin/internal/models/entity"
 	"github.com/GazDuckington/go-gin/internal/repository"
 )
 
 type UserService interface {
-	GetAll() ([]dto.UserResponse, error)
-	GetByID(id uint) (*dto.UserResponse, error)
-	Create(req dto.CreateUserRequest) (*dto.UserResponse, error)
+	GetAll(ctx context.Context) ([]dto.UserResponse, error)
+	GetByID(ctx context.Context, id string) (*dto.UserResponse, error)
+	Create(ctx context.Context, req dto.CreateUserRequest) (*dto.UserResponse, error)
 }
 
 type userService struct {
@@ -20,8 +22,8 @@ func NewUserService(r repository.UserRepository) UserService {
 	return &userService{repo: r}
 }
 
-func (s *userService) GetAll() ([]dto.UserResponse, error) {
-	users, err := s.repo.FindAll()
+func (s *userService) GetAll(ctx context.Context) ([]dto.UserResponse, error) {
+	users, err := s.repo.FindAll(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -32,8 +34,8 @@ func (s *userService) GetAll() ([]dto.UserResponse, error) {
 	return out, nil
 }
 
-func (s *userService) GetByID(id uint) (*dto.UserResponse, error) {
-	u, err := s.repo.FindByID(id)
+func (s *userService) GetByID(ctx context.Context, id string) (*dto.UserResponse, error) {
+	u, err := s.repo.FindByID(ctx, id)
 	if err != nil {
 		return nil, err
 	}
@@ -44,9 +46,9 @@ func (s *userService) GetByID(id uint) (*dto.UserResponse, error) {
 	return resp, nil
 }
 
-func (s *userService) Create(req dto.CreateUserRequest) (*dto.UserResponse, error) {
+func (s *userService) Create(ctx context.Context, req dto.CreateUserRequest) (*dto.UserResponse, error) {
 	user := &entity.User{Name: req.Name, Email: req.Email}
-	if err := s.repo.Create(user); err != nil {
+	if err := s.repo.Create(ctx, user); err != nil {
 		return nil, err
 	}
 	return &dto.UserResponse{ID: user.ID, Name: user.Name, Email: user.Email}, nil

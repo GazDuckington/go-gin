@@ -2,7 +2,6 @@ package controller
 
 import (
 	"net/http"
-	"strconv"
 
 	"github.com/GazDuckington/go-gin/internal/config"
 	"github.com/GazDuckington/go-gin/internal/models/dto"
@@ -21,7 +20,7 @@ func NewUserController(s service.UserService, cfg *config.Config) *UserControlle
 
 func (ctrl *UserController) GetAll(c *gin.Context) {
 	ctrl.cfg.Logger.Debug("GetAll users called")
-	users, err := ctrl.svc.GetAll()
+	users, err := ctrl.svc.GetAll(c)
 	if err != nil {
 		ctrl.cfg.Logger.Errorf("GetAll error: %v", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "internal"})
@@ -32,12 +31,8 @@ func (ctrl *UserController) GetAll(c *gin.Context) {
 
 func (ctrl *UserController) GetByID(c *gin.Context) {
 	idStr := c.Param("id")
-	id64, err := strconv.ParseUint(idStr, 10, 32)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
-		return
-	}
-	user, err := ctrl.svc.GetByID(uint(id64))
+
+	user, err := ctrl.svc.GetByID(c, idStr)
 	if err != nil {
 		ctrl.cfg.Logger.Errorf("GetByID error: %v", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "internal"})
@@ -57,7 +52,7 @@ func (ctrl *UserController) Create(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	created, err := ctrl.svc.Create(req)
+	created, err := ctrl.svc.Create(c, req)
 	if err != nil {
 		ctrl.cfg.Logger.Errorf("Create error: %v", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "internal"})

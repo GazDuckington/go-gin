@@ -13,7 +13,7 @@ import (
 
 func RegisterUserRoutes(r *gin.Engine, cfg *config.Config) {
 	// wire concrete implementations
-	userRepo := repository.NewUserRepository(database.DB)
+	userRepo := repository.NewUserRepository(database.DB, cfg)
 	userSvc := service.NewUserService(userRepo)
 	userCtrl := controller.NewUserController(userSvc, cfg)
 

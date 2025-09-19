@@ -9,3 +9,4 @@ insipred by [Khannedy's golang-clean-architecture](https://github.com/GazDucking
 - [Gorm](https://gorm.io) (Postgres)
 - [Logrus](https://github.com/sirupsen/logrus)
 - [Godotenv](https://github.com/joho/godotenv)
+- [Migrate](https://github.com/golang-migrate/migrate)

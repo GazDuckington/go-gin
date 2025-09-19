@@ -4,7 +4,7 @@ import (
 	database "github.com/GazDuckington/go-gin/db"
 	"github.com/GazDuckington/go-gin/internal/config"
 	"github.com/GazDuckington/go-gin/internal/controller"
-	middleware "github.com/GazDuckington/go-gin/internal/middlewares"
+	"github.com/GazDuckington/go-gin/internal/middleware"
 	"github.com/GazDuckington/go-gin/internal/repository"
 	"github.com/GazDuckington/go-gin/internal/service"
 	"github.com/GazDuckington/go-gin/pkgs/auth"

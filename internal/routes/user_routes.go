@@ -19,8 +19,10 @@ func RegisterUserRoutes(r *gin.Engine, cfg *config.Config) {
 
 	g := r.Group("/users")
 	g.Use(middleware.AuthRequired(middleware.AuthConfig{
-		Logger:        cfg.Logger,
-		ValidateToken: auth.ValidateJWT,
+		Logger: cfg.Logger,
+		ValidateToken: func(token string) (any, error) {
+			return auth.ValidateJWT(token, cfg)
+		},
 	}))
 	{
 		g.GET("", userCtrl.GetAll)

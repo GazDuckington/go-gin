@@ -20,6 +20,7 @@ type Config struct {
 	DBPassword string
 	DBName     string
 	DBSSLMode  string
+	JWTSecret  string
 
 	Logger *logrus.Logger
 }
@@ -58,6 +59,7 @@ func LoadConfig() *Config {
 		DBPassword: getEnv("DB_PASSWORD", "postgres"),
 		DBName:     getEnv("DB_NAME", "myapp_db"),
 		DBSSLMode:  getEnv("DB_SSLMODE", "disable"),
+		JWTSecret:  getEnv("JWT_SECRET", "super-secret-key"),
 		Logger:     logger,
 	}
 

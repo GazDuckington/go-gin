@@ -14,6 +14,7 @@ import (
 type UserRepository interface {
 	FindAll(ctx context.Context) ([]entity.User, error)
 	FindByID(ctx context.Context, id string) (*entity.User, error)
+	FindByLogin(ctx context.Context, login string) (*entity.User, error)
 	Create(ctx context.Context, user *entity.User) error
 }
 
@@ -49,6 +50,17 @@ func (r *userRepository) FindByID(ctx context.Context, id string) (*entity.User,
 		if err == gorm.ErrRecordNotFound {
 			return nil, errors.New("user not found")
 		}
+		return nil, err
+	}
+	return &user, nil
+}
+
+func (r *userRepository) FindByLogin(ctx context.Context, login string) (*entity.User, error) {
+	var user entity.User
+	err := database.RunInTransaction(ctx, r.db, r.logger, func(tx *gorm.DB) error {
+		return tx.Where("email = ? OR username = ?", login, login).First(&user).Error
+	})
+	if err != nil {
 		return nil, err
 	}
 	return &user, nil
